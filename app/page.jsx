@@ -1,7 +1,9 @@
 "use client";
 import Image from "next/image";
 import { useState } from "react";
-
+/*
+* ueah
+*/
 export default function Home() {
   const [recipes, setRecipes] = useState([]); // Store fetched recipes
   const [input, setInput] = useState(""); // Store user input
@@ -10,7 +12,7 @@ export default function Home() {
   async function getRecipe(event) {
     event.preventDefault(); // Prevent default form submission behavior
 
-    const apiKey = "2a0bca73042b453ba15d6c38335a59ae"; // Replace with your API key
+    const apiKey = process.env.REACT_APP_API_KEY; // Replace with your API key
     const ingredients = input; // Use the input string for the includeIngredients parameter
     const url = `https://api.spoonacular.com/recipes/complexSearch?includeIngredients=${encodeURIComponent(
       ingredients
