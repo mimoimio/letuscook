@@ -5,6 +5,7 @@ import { useState } from "react";
 export default function Home() {
   const [recipes, setRecipes] = useState([]); // Store detailed recipes
   const [input, setInput] = useState(""); // Store user input
+  const [loading, setLoading] = useState(false);
 
   async function storeRecipe(recipe) {
     try {
@@ -27,47 +28,10 @@ export default function Home() {
     }
   }
 
-  // Simulate the response with a test JSON object
-  function testgetRecipe(event) {
-    event.preventDefault(); // Prevent default form submission behavior
-
-    const testRecipes = [
-      {
-        id: 1,
-        title: "Spaghetti Carbonara",
-        image: "",
-        readyInMinutes: 20,
-        servings: 4,
-        nutrition: {
-          nutrients: [
-            { name: "Calories", amount: 200, unit: "kcal" },
-            { name: "Fat", amount: 10, unit: "g" },
-            { name: "Carbs", amount: 30, unit: "g" }
-          ]
-        }
-      },
-      {
-        id: 2,
-        title: "Chicken Salad",
-        image: "",
-        readyInMinutes: 15,
-        servings: 2,
-        nutrition: {
-          nutrients: [
-            { name: "Calories", amount: 150, unit: "kcal" },
-            { name: "Fat", amount: 5, unit: "g" },
-            { name: "Protein", amount: 20, unit: "g" }
-          ]
-        }
-      }
-    ];
-
-    // Set the test data to recipes
-    setRecipes(testRecipes);
-  }
-
   // Fetch recipes from Spoonacular API
   async function getRecipe(event) {
+    setLoading(true);
+
     event.preventDefault(); // Prevent default form submission behavior
     const apiKey = process.env.NEXT_PUBLIC_REACT_APP_API_KEY; // Replace with your API key
     const ingredients = input; // Use the input string for the includeIngredients parameter
@@ -103,6 +67,8 @@ export default function Home() {
     } catch (error) {
       console.error(error);
       setRecipes([]); // Reset recipes on error
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -110,7 +76,7 @@ export default function Home() {
     <div className="flex flex-col text-black items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <div className="w-full h-full bg-white p-2 container">
         {/* Input Form */}
-        <form onSubmit={testgetRecipe}>
+        <form onSubmit={getRecipe}>
           <input
             type="text"
             value={input}
@@ -120,9 +86,10 @@ export default function Home() {
           />
           <button
             type="submit"
-            className="mt-2 p-2 bg-blue-500 text-white rounded"
+            className="mt-2 p-2 bg-blue-500 text-white rounded disabled:bg-blue-900 "
+            disabled={loading}
           >
-            Get Recipes
+            {loading? "Loading" : "Get Recipes" }
           </button>
         </form>
 
@@ -166,8 +133,8 @@ export default function Home() {
                 </button>
               </div>
             ))
-          ) : (
-            <p>No recipes found. Try different ingredients!</p>
+          ) : input=="" ? (<p>Enter Ingredients to start browsing recipes</p>) : (
+            <p></p>
           )}
         </div>
       </div>

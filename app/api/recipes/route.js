@@ -3,33 +3,54 @@ import { open } from 'sqlite';
 
 // Open the SQLite database
 const dbPromise = open({
-  filename: './recipes.db',
-  driver: sqlite3.Database,
+    filename: './recipes.db',
+    driver: sqlite3.Database,
 });
 
 // This function stores the recipe in the database
 async function storeRecipeInDB(recipe) {
-  const db = await dbPromise;
-
-  try {
-    await db.run(
-      `INSERT INTO recipes (id)
+    const db = await dbPromise;
+    try {
+        await db.run(
+            `INSERT INTO recipes (id)
       VALUES (?)`,
-      [recipe.id,]
-    );
-  } catch (error) {
-    throw new Error('Failed to store recipe');
-    // console.error(error)
-  }
+            [recipe.id,]
+        );
+    } catch (error) {
+        throw new Error('Failed to store recipe');
+        // console.error(error)
+    }
+}
+// This function retrieve the recipe in the database
+async function retrieveRecipeInDB() {
+    const db = await dbPromise;
+    try {
+        const recipes = await db.all(`SELECT * FROM recipes`);
+        return recipes;
+    } catch (error) {
+        throw new Error('Failed to retrieve recipes');
+    }
+
 }
 
 export async function POST(request) {
-  const recipe = await request.json(); // Get the recipe data from the request body
+    const recipe = await request.json(); // Get the recipe data from the request body
 
-  try {
-    await storeRecipeInDB(recipe);
-    return new Response('Recipe saved successfully', { status: 200 });
-  } catch (error) {
-    return new Response(error.message, { status: 500 });
-  }
+    try {
+        await storeRecipeInDB(recipe);
+        return new Response('Recipe saved successfully', { status: 200 });
+    } catch (error) {
+        return new Response(error.message, { status: 500 });
+    }
+}
+
+
+
+export async function GET(request) {
+    try {
+        const recipes = await retrieveRecipeInDB();
+        return new Response(recipes, { status: 200 });
+    } catch (error) {
+        return new Response(error.message, { status: 500 });
+    }
 }

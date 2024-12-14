@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link'
 
 function Navbar() {
   return (
@@ -42,18 +43,23 @@ function Navbar() {
         </div>
 
         {/* Navigation for larger screens */}
-        <div className="hidden sm:flex sm:space-x-10 items-center font-bold text-base sm:text-xl">
-          
-            <a>Home</a>
-      
-          
-            <a>Explore</a>
-       
-            <a>Favourites</a>
-        
-            <a>I'm Feeling Zesty</a>
-         
-        </div>
+        <div>
+        <ul  className="hidden sm:flex sm:space-x-10 items-center font-bold text-base sm:text-xl">
+      <li>
+        <Link href="/">Home</Link>
+      </li>
+      <li>
+        <Link href="/explore">Explore</Link>
+      </li>
+      <li>
+        <Link href="/favourite">Favourite</Link>
+      </li>
+      <li>
+        <Link href="/random">Im Feeling Zesty</Link>
+      </li>
+    </ul>
+    </div>
+  
       </div>
     </div>
   );
