@@ -6,6 +6,66 @@ export default function Home() {
   const [recipes, setRecipes] = useState([]); // Store detailed recipes
   const [input, setInput] = useState(""); // Store user input
 
+  async function storeRecipe(recipe) {
+    try {
+      const response = await fetch('/api/recipes', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(recipe),
+      });
+
+      if (response.ok) {
+        alert('Recipe saved successfully');
+      } else {
+        throw new Error('Failed to save recipe');
+      }
+    } catch (error) {
+      console.error('Error saving recipe:', error);
+      alert('Failed to save recipe');
+    }
+  }
+
+  // Simulate the response with a test JSON object
+  function testgetRecipe(event) {
+    event.preventDefault(); // Prevent default form submission behavior
+
+    const testRecipes = [
+      {
+        id: 1,
+        title: "Spaghetti Carbonara",
+        image: "",
+        readyInMinutes: 20,
+        servings: 4,
+        nutrition: {
+          nutrients: [
+            { name: "Calories", amount: 200, unit: "kcal" },
+            { name: "Fat", amount: 10, unit: "g" },
+            { name: "Carbs", amount: 30, unit: "g" }
+          ]
+        }
+      },
+      {
+        id: 2,
+        title: "Chicken Salad",
+        image: "",
+        readyInMinutes: 15,
+        servings: 2,
+        nutrition: {
+          nutrients: [
+            { name: "Calories", amount: 150, unit: "kcal" },
+            { name: "Fat", amount: 5, unit: "g" },
+            { name: "Protein", amount: 20, unit: "g" }
+          ]
+        }
+      }
+    ];
+
+    // Set the test data to recipes
+    setRecipes(testRecipes);
+  }
+
   // Fetch recipes from Spoonacular API
   async function getRecipe(event) {
     event.preventDefault(); // Prevent default form submission behavior
@@ -50,7 +110,7 @@ export default function Home() {
     <div className="flex flex-col text-black items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <div className="w-full h-full bg-white p-2 container">
         {/* Input Form */}
-        <form onSubmit={getRecipe}>
+        <form onSubmit={testgetRecipe}>
           <input
             type="text"
             value={input}
@@ -101,6 +161,9 @@ export default function Home() {
                     ))}
                   </ul>
                 </div>
+                <button onClick={() => storeRecipe(recipe)} className="bg-[#804] text-white px-2 rounded-full">
+                  Save Recipe
+                </button>
               </div>
             ))
           ) : (
