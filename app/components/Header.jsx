@@ -1,6 +1,13 @@
 import Image from 'next/image';
 import Link from 'next/link'
 
+const Pill = ({href,name}) => {
+  return(
+  <li>
+    <Link href={href} className='px-4 p-2 hover:bg-gray-300 rounded-full hover:shadow-lg duration-100'>{name}</Link>
+  </li>);
+}
+
 function Navbar() {
   return (
     <div className="px-4 sm:px-10">
@@ -14,52 +21,17 @@ function Navbar() {
           height={160}
         />
 
-        {/* Dropdown for mobile */}
-        <div className="relative sm:hidden group">
-          <button className="text-xl font-bold mr-7">...</button>
-          <div className="absolute right-0 mt-2 w-40 bg-white shadow-md rounded-lg hidden group-hover:block">
-            <div className="flex flex-col items-start p-2">
-             
-                <a className="py-1 px-4 hover:bg-gray-200 w-full text-left">
-                  Home
-                </a>
-              
-             
-                <a className="py-1 px-4 hover:bg-gray-200 w-full text-left">
-                  Explore
-                </a>
-             
-              
-                <a className="py-1 px-4 hover:bg-gray-200 w-full text-left">
-                  Favourites
-                </a>
-             
-                <a className="py-1 px-4 hover:bg-gray-200 w-full text-left">
-                  I'm Feeling Zesty
-                </a>
-             
-            </div>
-          </div>
-        </div>
-
         {/* Navigation for larger screens */}
         <div>
-        <ul  className="hidden sm:flex sm:space-x-10 items-center font-bold text-base sm:text-xl">
-      <li>
-        <Link href="/">Home</Link>
-      </li>
-      <li>
-        <Link href="/explore">Explore</Link>
-      </li>
-      <li>
-        <Link href="/favourite">Favourite</Link>
-      </li>
-      <li>
-        <Link href="/random">Im Feeling Zesty</Link>
-      </li>
-    </ul>
-    </div>
-  
+          <ul className="hidden sm:flex sm:space-x-10 items-center font-bold text-base sm:text-xl">
+            
+            <Pill href={"/"} name={"Home"}/>
+            <Pill href={"/explore"} name={"Explore"}/>
+            <Pill href={"/favourite"} name={"Favourite"}/>
+            <Pill href={"/random"} name={"Surprise Me"}/>
+          </ul>
+        </div>
+
       </div>
     </div>
   );

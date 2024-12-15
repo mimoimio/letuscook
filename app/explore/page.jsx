@@ -5,9 +5,13 @@ import { useState, useEffect } from "react";
 export default function Explore() {
   const [recipes, setRecipes] = useState([]); // Store detailed recipes
   const [category, setCategory] = useState("appetizer"); // Default category
+  const [searched, setSearched] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   // Fetch recipes from Spoonacular API based on category
   async function getRecipe(selectedCategory) {
+    setLoading(true);
+    setSearched(false);
     const apiKey = process.env.NEXT_PUBLIC_REACT_APP_API_KEY; // Your API key
     const url = `https://api.spoonacular.com/recipes/complexSearch?type=${selectedCategory}&number=9&apiKey=${apiKey}`;
 
@@ -27,6 +31,9 @@ export default function Explore() {
     } catch (error) {
       console.error(error);
       setRecipes([]);
+    }finally{
+      setLoading(false);
+      setSearched(true);
     }
   }
 
@@ -138,9 +145,9 @@ export default function Explore() {
             </div>
           ))
         ) : (
-          <p className="text-center col-span-3 text-gray-600">
+          searched ? (<p className="text-center col-span-3 text-gray-600">
             No recipes found. Try selecting a different category!
-          </p>
+          </p>) :  "" 
         )}
       </div>
     </div>

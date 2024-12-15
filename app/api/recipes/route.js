@@ -8,13 +8,13 @@ const dbPromise = open({
 });
 
 // This function stores the recipe in the database
-async function storeRecipeInDB(recipe) {
+async function storeRecipeInDB(id) {
     const db = await dbPromise;
     try {
         await db.run(
             `INSERT INTO recipes (id)
       VALUES (?)`,
-            [recipe.id,]
+            [id]
         );
     } catch (error) {
         throw new Error('Failed to store recipe');
@@ -34,10 +34,10 @@ async function retrieveRecipeInDB() {
 }
 
 export async function POST(request) {
-    const recipe = await request.json(); // Get the recipe data from the request body
+    const id = await request.json(); // Get the recipe data from the request body
 
     try {
-        await storeRecipeInDB(recipe);
+        await storeRecipeInDB(id);
         return new Response('Recipe saved successfully', { status: 200 });
     } catch (error) {
         return new Response(error.message, { status: 500 });

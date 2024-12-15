@@ -1,4 +1,4 @@
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Istok_Web } from "next/font/google";
 import "./globals.css";
 import Navbar from "./components/Header";
 const geistSans = Geist({
@@ -10,6 +10,13 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
+const istokweb = Istok_Web({
+  variable: "--font-istok-web",
+  subsets: ["latin"],
+  weight:'400'
+});
+
+
 
 export const metadata = {
   title: "Create Next App",
@@ -19,7 +26,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className={`font-mono antialiased`}>
         <Navbar/>
         {children}
       </body>
