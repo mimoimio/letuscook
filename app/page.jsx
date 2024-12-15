@@ -9,6 +9,27 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
 
+  async function storeRecipe(recipe) {
+    try {
+      const response = await fetch('/api/recipes', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(recipe),
+      });
+
+      if (response.ok) {
+        alert('Recipe saved successfully');
+      } else {
+        throw new Error('Failed to save recipe');
+      }
+    } catch (error) {
+      console.error('Error saving recipe:', error);
+      alert('Failed to save recipe');
+    }
+  }
+
   // Fetch recipes from Spoonacular API
   async function getRecipe(event) {
     setSearched(false);
