@@ -1,16 +1,16 @@
 "use client";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export default function Favourites() {
+export default async function Favourites() {
     const [recipes, setRecipes] = useState([]); // Store detailed recipes
-
-    async function retrieveRecipe() {
+    const [recipeIds, setRecipeIds] = useState([]); // Store recipe IDs as an array
+    async function retrieveRecipeIds() {
         try {
             const response = await fetch('/api/recipes');
-            const recipes = response.json
+            const recipeIds = response.json
             if (response.ok) {
-                setRecipes(recipes)
+                setRecipeIds(recipeIds)
             } else {
                 throw new Error('Failed to save recipe');
             }
@@ -20,14 +20,14 @@ export default function Favourites() {
         }
     }
 
+    await retrieveRecipeIds();
+    
     // Fetch recipes from Spoonacular API
     async function getRecipe(event) {
         event.preventDefault(); // Prevent default form submission behavior
         const apiKey = process.env.NEXT_PUBLIC_REACT_APP_API_KEY; // Replace with your API key
-        const ingredients = input; // Use the input string for the includeIngredients parameter
-        const url = `https://api.spoonacular.com/recipes/complexSearch?includeIngredients=${encodeURIComponent(
-            ingredients
-        )}&number=9&apiKey=${apiKey}`; // Set the URL dynamically
+        const ids = recipeIds.join(','); // Join IDs into a comma-separated string
+        const url = `https://api.spoonacular.com/recipes/informationBulk?ids=${ids}&apiKey=${apiKey}`; // Set the URL dynamically
 
         try {
             const response = await fetch(url);
@@ -59,6 +59,8 @@ export default function Favourites() {
             setRecipes([]); // Reset recipes on error
         }
     }
+
+
 
     return (
         <div className="flex flex-col text-black items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
@@ -104,7 +106,7 @@ export default function Favourites() {
                                 </button>
                             </div>
                         ))
-                    ) : (<p>Enter Ingredients to start browsing recipes</p>)
+                    ) : (<p></p>)
                     }
                 </div>
             </div>
