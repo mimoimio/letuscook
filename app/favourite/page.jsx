@@ -2,69 +2,37 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-export default async function Favourites() {
+export default function Favourites() {
     const [recipes, setRecipes] = useState([]); // Store detailed recipes
-    const [recipeIds, setRecipeIds] = useState([]); // Store recipe IDs as an array
-    async function retrieveRecipeIds() {
-        try {
-            const response = await fetch('/api/recipes');
-            const recipeIds = response.json
-            if (response.ok) {
-                setRecipeIds(recipeIds)
-            } else {
-                throw new Error('Failed to save recipe');
-            }
-        } catch (error) {
-            console.error('Error saving recipe:', error);
-            alert('Failed to save recipe');
-        }
-    }
 
-    await retrieveRecipeIds();
-    
     // Fetch recipes from Spoonacular API
-    async function getRecipe(event) {
-        event.preventDefault(); // Prevent default form submission behavior
-        const apiKey = process.env.NEXT_PUBLIC_REACT_APP_API_KEY; // Replace with your API key
-        const ids = recipeIds.join(','); // Join IDs into a comma-separated string
-        const url = `https://api.spoonacular.com/recipes/informationBulk?ids=${ids}&apiKey=${apiKey}`; // Set the URL dynamically
-
-        try {
-            const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error("Failed to fetch recipes");
-            }
-            const data = await response.json();
-
-            if (data.results && data.results.length > 0) {
-                // Extract IDs from the results
-                const recipeIds = data.results.map((recipe) => recipe.id).join(",");
-
-                // Fetch detailed information
-                const detailsUrl = `https://api.spoonacular.com/recipes/informationBulk?ids=${recipeIds}&includeNutrition=true&apiKey=${apiKey}`;
+    useEffect(() => {
+        async function getRecipes() {
+            const apiKey = process.env.NEXT_PUBLIC_REACT_APP_API_KEY;
+            const detailsUrl = `https://api.spoonacular.com/recipes/informationBulk?ids=715415,715446,716004&includeNutrition=true&apiKey=${apiKey}`;
+            try {
                 const detailsResponse = await fetch(detailsUrl);
 
                 if (!detailsResponse.ok) {
                     throw new Error("Failed to fetch recipe details");
                 }
                 const detailedData = await detailsResponse.json();
-
-                // Update state with detailed recipes
-                setRecipes(detailedData);
-            } else {
-                setRecipes([]); // No recipes found
+                setRecipes(detailedData); // Update state with fetched recipes
+            } catch (error) {
+                console.error("Error fetching recipes:", error);
             }
-        } catch (error) {
-            console.error(error);
-            setRecipes([]); // Reset recipes on error
         }
-    }
 
-
+        getRecipes();
+    }, []); // Empty dependency array ensures the API call runs only once
 
     return (
         <div className="flex flex-col text-black items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
             <div className="w-full h-full bg-white p-2 container">
+                {/* Header */}
+                <div className="text-center mt-10">
+                    <h1 className="font-bold text-4xl">Your Favorites</h1>
+                </div>
 
                 {/* Recipe List */}
                 <div className="container p-2 grid grid-cols-3 gap-4 ">
@@ -101,13 +69,17 @@ export default async function Favourites() {
                                         ))}
                                     </ul>
                                 </div>
-                                <button onClick={() => storeRecipe(recipe)} className="bg-[#804] text-white px-2 rounded-full">
+                                <button
+                                    onClick={() => storeRecipe(recipe)}
+                                    className="bg-[#804] text-white px-2 rounded-full"
+                                >
                                     Save Recipe
                                 </button>
                             </div>
                         ))
-                    ) : (<p></p>)
-                    }
+                    ) : (
+                        <p>No recipes found.</p>
+                    )}
                 </div>
             </div>
         </div>
