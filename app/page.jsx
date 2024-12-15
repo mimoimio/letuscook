@@ -77,7 +77,7 @@ export default function Home() {
   }
 
   return (
-    <div className="flex flex-col text-black items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+    <div className="bg-bg-image flex flex-col text-black items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <div className="w-1/2 h-full bg-white p-2 container">
         {/* Input Form */}
         <form onSubmit={getRecipe} className="w-full flex items-center gap-4">
