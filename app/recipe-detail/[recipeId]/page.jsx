@@ -12,17 +12,17 @@ export default async function RecipeDetails({ params }) {
   console.log(information);
 
   return (
-    <div>
-      <h2>Recipe Name: {information.title}</h2>
+    <div className="flex flex-col justify-center items-center">
+      <h2 className="text-center mb-10 font-sans text-2xl">Recipe Name: {information.title}</h2>
       <Image
         src={information.image}
         width={500}
         height={500}
         alt="Recipe Image"
       />
-      <p>Recipe Time: {information.readyInMinutes} minutes</p>
+      <p className="my-10">Recipe Time: {information.readyInMinutes} minutes</p>
       {/* Render the summary with HTML */}
-      <div dangerouslySetInnerHTML={{ __html: information.summary }} />
+      <div dangerouslySetInnerHTML={{ __html: information.summary }} className="px-10 text-wrap"/>
     </div>
   );
 }
