@@ -7,6 +7,10 @@ export default {
   ],
   theme: {
     extend: {
+      backgroundImage: {
+        'bg-image': "url('/Background.png')",
+        'bg-popup': "url('/BackgroundPopup.png')",
+      },
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
